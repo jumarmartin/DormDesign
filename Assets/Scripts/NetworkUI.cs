@@ -10,7 +10,6 @@ public class NetworkUI : MonoBehaviour
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
     [SerializeField] private Button serverButton;
-    // Start is called before the first frame update
     private void Awake()
     {
         hostButton.onClick.AddListener(() =>
@@ -28,13 +27,23 @@ public class NetworkUI : MonoBehaviour
         {
             print("Starting client");
             NetworkManager.Singleton.StartClient();
-
         });
     }
 
     void Start()
     {
+#if UNITY_WEBGL
+            NetworkManager.Singleton.StartClient();
+#endif
 
+#if UNITY_EDITOR
+        NetworkManager.Singleton.StartHost();
+#endif
+
+#if UNITY_SERVER
+            Debug.Log("I am a server :)");
+            NetworkManager.Singleton.StartServer();
+#endif
     }
 
     // Update is called once per frame
